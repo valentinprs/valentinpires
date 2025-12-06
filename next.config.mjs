@@ -5,8 +5,8 @@ const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 
-  // Ajout d'une config Turbopack vide pour valider l'usage
-  turbo: {},
+  // Enable Turbopack explicitly even though MDX plugin injects webpack config
+  turbopack: {},
 };
 
 const withMDX = createMDX({
