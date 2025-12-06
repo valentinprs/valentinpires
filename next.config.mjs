@@ -5,8 +5,8 @@ const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 
-  // Désactive Turbopack pour éviter l'erreur
-  turbo: false,
+  // Ajout d'une config Turbopack vide pour valider l'usage
+  turbo: {},
 };
 
 const withMDX = createMDX({
