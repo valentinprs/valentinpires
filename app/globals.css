@@ -1,6 +1,4 @@
 @import 'tailwindcss';
-@plugin '@tailwindcss/typography';
-@custom-variant dark (&:is(.dark *));
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -17,6 +15,12 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer utilities {
+  .text-secondary {
+    color: var(--color-zinc-400);
   }
 }
 
