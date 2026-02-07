@@ -32,13 +32,13 @@ export function CertificationsSection() {
         {CERTIFICATIONS.map((certification) => (
           <article
             key={certification.id}
-            className="grid gap-2 border-b border-zinc-800 py-4 last:border-b-0 md:grid-cols-[1fr_56px] md:items-center md:gap-4"
+            className="grid gap-2 border-b border-zinc-800 py-4 last:border-b-0 md:grid-cols-[160px_1fr_92px_20px] md:items-start md:gap-4"
           >
-            <p className="flex items-baseline gap-3 text-secondary">
+            <p className="flex items-baseline gap-3 text-secondary md:col-span-2">
               <span className="font-medium text-zinc-100">{certification.name}</span>
               <span>{certification.id}</span>
             </p>
-            <p className="justify-self-start tabular-nums text-secondary text-[14px]">
+            <p className="justify-self-start tabular-nums text-secondary text-[14px] md:col-start-3">
               {certification.year}
             </p>
           </article>
