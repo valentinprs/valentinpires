@@ -7,8 +7,8 @@ export type WorkExperienceRole = {
 
 export type WorkExperiencePage = {
   description: string
-  achievements: string[]
   mediaPlaceholders: string[]
+  productBullets?: string[]
 }
 
 export type WorkExperience = {
@@ -35,7 +35,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
       {
         title: 'Design Systems Lead',
         location: 'Paris, France',
-        years: '2022 -',
+        years: '2024 -',
         bullets: [
           'Rebuilt the Design System with Angular components to improve consistency, scalability, and delivery speed.',
           'Implemented design tokens to align design and code across teams and products.',
@@ -61,15 +61,13 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     slug: 'totalenergies',
     workPage: {
       description: 'Fictional case study page for TotalEnergies work experience.',
-      achievements: [
-        'Rebuilt the Design System with Angular components to improve consistency, scalability, and delivery speed.',
-        'Implemented design tokens to align design and code across teams and products.',
-        'Partnered with design and engineering teams to define governance and drive adoption.',
-        'Tracked adoption with Figma Library Analytics and a GitHub linting workflow.',
-      ],
       mediaPlaceholders: [
         'Design system foundations and component architecture',
         'Cross-team adoption dashboard and governance workflow',
+      ],
+      productBullets: [
+        'Work on products for different branches of TotalEnergies.',
+        'Work on a mobile app for Be:Mo internal use.',
       ],
     },
   },
@@ -81,6 +79,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
       {
         title: 'Product Designer',
         location: 'Paris, France',
+        years: '2020 - 22',
         bullets: [
           'Partnered with both B2B and B2C teams across SeLoger.',
           'Guided the SeLoger Group migration from Sketch to Figma.',
@@ -91,14 +90,21 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     showArrow: true,
     id: 'work2',
     slug: 'seloger',
+    workPage: {
+      description: 'Fictional case study page for SeLoger work experience.',
+      mediaPlaceholders: [
+        'B2B and B2C product experience overview',
+        'Design tooling migration and collaboration model',
+      ],
+    },
   },
   {
     company: 'Airbus',
-    start: '2018',
+    start: '2017',
     end: '2020',
     roles: [
       {
-        title: 'Product Designer',
+        title: 'UX Designer',
         location: 'Toulouse, France',
         bullets: [
           'Researched user needs and workflows for the cockpit of the future (DisCo project).',
@@ -114,31 +120,12 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     slug: 'airbus',
   },
   {
-    company: 'Alten',
-    start: '2018',
-    end: '2023',
-    roles: [
-      {
-        title: 'Product Designer',
-        location: 'Toulouse, France',
-        bullets: [
-          'Designed VR and AR experiences to showcase Alten solutions to clients.',
-          'Presented Alten offerings at the Paris Air Show (Le Bourget).',
-        ],
-      },
-    ],
-    link: 'https://www.alten.fr/',
-    showArrow: true,
-    id: 'work4',
-    slug: 'alten',
-  },
-  {
     company: 'Dassault Systèmes',
-    start: '2018',
-    end: '2023',
+    start: '2016',
+    end: '2016',
     roles: [
       {
-        title: 'Product Designer',
+        title: 'UX Designer',
         location: 'Vélizy-Villacoublay, France',
         bullets: [
           'Product Designer for the 3DEXPERIENCE platform.',
@@ -161,4 +148,9 @@ export const WORK_EXPERIENCE_WITH_WORK_PAGE = WORK_EXPERIENCE.filter(
 
 export function getWorkExperienceBySlug(slug: string) {
   return WORK_EXPERIENCE.find((experience) => experience.slug === slug)
+}
+
+export function getWorkExperienceIntroBullets(experience: WorkExperience) {
+  const roleBullets = experience.roles?.flatMap((role) => role.bullets ?? []) ?? []
+  return Array.from(new Set(roleBullets))
 }

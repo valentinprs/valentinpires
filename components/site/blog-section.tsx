@@ -16,7 +16,7 @@ export function BlogSection() {
       transition={SECTION_TRANSITION}
       className="space-y-4"
     >
-      <h3 className="text-lg font-medium">Blog</h3>
+      <h3 className="text-lg font-medium text-secondary">Blog</h3>
       <div className="flex flex-col space-y-0">
         <AnimatedBackground
           enableHover

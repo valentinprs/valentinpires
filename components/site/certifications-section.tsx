@@ -26,7 +26,7 @@ export function CertificationsSection() {
       transition={SECTION_TRANSITION}
       className="space-y-4"
     >
-      <h3 className="text-[18px] font-medium text-zinc-100">Certifications</h3>
+      <h3 className="text-[18px] font-medium text-secondary">Certifications</h3>
 
       <div className="border-t border-zinc-800">
         {CERTIFICATIONS.map((certification) => (

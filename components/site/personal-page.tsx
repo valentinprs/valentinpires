@@ -3,7 +3,6 @@
 import { motion } from 'motion/react'
 import { WorkExperience } from '@/components/site/work-experience'
 import { CertificationsSection } from '@/components/site/certifications-section'
-import { BlogSection } from '@/components/site/blog-section'
 import { ConnectSection } from '@/components/site/connect-section'
 
 const VARIANTS_CONTAINER = {
@@ -26,7 +25,6 @@ export function PersonalPage() {
     >
       <WorkExperience />
       <CertificationsSection />
-      <BlogSection />
       <ConnectSection />
     </motion.main>
   )

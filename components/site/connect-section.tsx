@@ -85,7 +85,7 @@ export function ConnectSection() {
       transition={SECTION_TRANSITION}
       className="space-y-4"
     >
-      <h3 className="text-lg font-medium">Connect</h3>
+      <h3 className="text-lg font-medium text-secondary">Connect</h3>
       <p className="text-secondary">
         Feel free to contact me at{' '}
         <a className="underline text-zinc-300" href={`mailto:${EMAIL}`}>
