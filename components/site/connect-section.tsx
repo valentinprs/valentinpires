@@ -83,9 +83,10 @@ export function ConnectSection() {
     <motion.section
       variants={SECTION_VARIANTS}
       transition={SECTION_TRANSITION}
+      className="space-y-4"
     >
-      <h3 className="mb-5 text-lg font-medium">Connect</h3>
-      <p className="mb-5 text-secondary">
+      <h3 className="text-lg font-medium">Connect</h3>
+      <p className="text-secondary">
         Feel free to contact me at{' '}
         <a className="underline text-zinc-300" href={`mailto:${EMAIL}`}>
           {EMAIL}

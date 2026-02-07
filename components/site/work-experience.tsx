@@ -20,13 +20,13 @@ export function WorkExperience() {
     <motion.section
       variants={SECTION_VARIANTS}
       transition={SECTION_TRANSITION}
-      className="space-y-10"
+      className="space-y-4"
     >
       <h3 className="text-[18px] font-medium text-zinc-100">
         Work Experiences
       </h3>
 
-      <div className="border-y border-zinc-800">
+      <div className="border-t border-zinc-800">
         {WORK_EXPERIENCE.map((job) => (
           <article
             className="grid gap-2 border-b border-zinc-800 py-4 last:border-b-0 md:grid-cols-[160px_1fr_92px] md:items-start md:gap-4"

@@ -28,7 +28,7 @@ export function CertificationsSection() {
     >
       <h3 className="text-[18px] font-medium text-zinc-100">Certifications</h3>
 
-      <div className="border-y border-zinc-800">
+      <div className="border-t border-zinc-800">
         {CERTIFICATIONS.map((certification) => (
           <article
             key={certification.id}
