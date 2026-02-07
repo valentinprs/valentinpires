@@ -6,8 +6,15 @@ import {
 } from '@/components/site/section-motion'
 import { TextEffect } from '@/components/ui/text-effect'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export function Header() {
+  const pathname = usePathname()
+
+  if (pathname.startsWith('/work')) {
+    return null
+  }
+
   return (
     <header className="mb-12 space-y-3 text-lg">
       <div className="flex items-center gap-4 mb-6">
