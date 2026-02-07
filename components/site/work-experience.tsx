@@ -1,6 +1,5 @@
 'use client'
 
-import { ArrowUpRight, ExternalLink } from 'lucide-react'
 import { motion } from 'motion/react'
 import { WORK_EXPERIENCE } from '@/lib/data/work-experience'
 import {
@@ -8,106 +7,57 @@ import {
   SECTION_VARIANTS,
 } from '@/components/site/section-motion'
 
+function formatEndDate(end: string) {
+  if (end.toLowerCase() === 'now') {
+    return ''
+  }
+
+  return /^\d{4}$/.test(end) ? end.slice(-2) : end
+}
+
 export function WorkExperience() {
   return (
     <motion.section
       variants={SECTION_VARIANTS}
       transition={SECTION_TRANSITION}
+      className="space-y-10"
     >
-      <h3 className="mb-8 font-medium text-zinc-100">
-        Work Experience
+      <h3 className="text-[18px] font-medium text-zinc-100">
+        Work Experiences
       </h3>
-      <div className="space-y-12">
+
+      <div className="border-y border-zinc-800">
         {WORK_EXPERIENCE.map((job) => (
-          <div
-            className="grid gap-4 md:grid-cols-[112px_1fr]"
+          <article
+            className="grid gap-2 border-b border-zinc-800 py-4 last:border-b-0 md:grid-cols-[160px_1fr_92px] md:items-start md:gap-4"
             key={job.id}
           >
-            {/* Job dates */}
-            <p className="text-secondary">
-              <span>{job.start}</span>
-              <span className="px-2 text-secondary">&mdash;</span>
-              <span>{job.end}</span>
+            <p className="font-medium text-zinc-100">
+              {job.company}
             </p>
+
             {job.roles?.length ? (
-              <div className="space-y-8">
+              <div className="space-y-2">
                 {job.roles.map((role) => (
-                  <div
-                    className="space-y-4"
-                    key={`${job.id}-${role.title}`}
-                  >
-                    <div className="space-y-1">
-                      <h4 className="font-medium text-zinc-100">
-                        {role.title}{' '}
-                        <span className="text-secondary">at </span>
-                        <a
-                          className="inline-flex items-center gap-1 text-zinc-100 underline-offset-4 transition-colors hover:text-zinc-50 hover:underline"
-                          href={job.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {job.company}
-                          {job.showArrow ? (
-                            <ArrowUpRight
-                              className="h-4 w-4"
-                              aria-hidden="true"
-                            />
-                          ) : null}
-                        </a>
-                      </h4>
-
-                      <p className="text-secondary">
-                        {role.location}
-                      </p>
-                    </div>
-
-                    <ul className="space-y-2 list-disc text-secondary">
-                      {role.bullets.map((bullet) => (
-                        <li key={bullet}>
-                          {bullet}
-                        </li>
-                      ))}
-                    </ul>
+                  <div key={`${job.id}-${role.title}`} className="space-y-0.5">
+                    <h4 className="font-medium text-zinc-100">{role.title}</h4>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <h4 className="font-medium text-zinc-100">
-                    {job.title}{' '}
-                    <span className="text-secondary">at </span>
-                    <a
-                      className="inline-flex items-center gap-1 text-zinc-100 underline-offset-4 transition-colors hover:text-zinc-50 hover:underline"
-                      href={job.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {job.company}
-                      {job.showArrow ? (
-                        <ExternalLink
-                          className="h-4 w-4"
-                          aria-hidden="true"
-                        />
-                      ) : null}
-                    </a>
-                  </h4>
-
-                  <p className="text-secondary">
-                    {job.location}
-                  </p>
-                </div>
-
-                <ul className="space-y-2 list-disc text-secondary">
-                  {job.bullets?.map((bullet) => (
-                    <li key={bullet}>
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
+              <div className="space-y-1">
+                {job.title ? (
+                  <h4 className="font-medium text-zinc-100">{job.title}</h4>
+                ) : null}
               </div>
             )}
-          </div>
+
+            <p className="justify-self-start tabular-nums text-secondary text-[14px] md:text-left">
+              <span>{job.start}</span>
+              <span className="px-1 text-secondary">-</span>
+              <span>{formatEndDate(job.end)}</span>
+            </p>
+          </article>
         ))}
       </div>
     </motion.section>
