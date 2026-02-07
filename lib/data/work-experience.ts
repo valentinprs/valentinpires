@@ -44,7 +44,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
         ],
       },
       {
-        title: 'Product Designer',
+        title: 'Senior Product Designer',
         location: 'Paris, France',
         years: '2022 - 24',
         bullets: [

@@ -3,7 +3,7 @@
 import { motion } from 'motion/react'
 import { WorkExperience } from '@/components/site/work-experience'
 import { CertificationsSection } from '@/components/site/certifications-section'
-import { ConnectSection } from '@/components/site/connect-section'
+import { EducationSection } from '@/components/site/education-section'
 
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 0 },
@@ -18,14 +18,14 @@ const VARIANTS_CONTAINER = {
 export function PersonalPage() {
   return (
     <motion.main
-      className="space-y-24"
+      className="space-y-12"
       variants={VARIANTS_CONTAINER}
       initial="hidden"
       animate="visible"
     >
       <WorkExperience />
       <CertificationsSection />
-      <ConnectSection />
+      <EducationSection />
     </motion.main>
   )
 }

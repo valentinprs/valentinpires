@@ -39,10 +39,15 @@ export function WorkExperience() {
             duration: 0.2,
           }}
         >
-          {WORK_EXPERIENCE.map((job) => {
+          {WORK_EXPERIENCE.map((job, index) => {
             const isClickable = Boolean(job.workPage)
+            const isLast = index === WORK_EXPERIENCE.length - 1
             const rowContent = (
-              <div className="grid w-full gap-2 border-b border-zinc-800 py-4 md:grid-cols-[160px_1fr_92px_20px] md:items-start md:gap-4">
+              <div
+                className={`grid w-full gap-2 py-4 md:grid-cols-[160px_1fr_92px_20px] md:items-start md:gap-4 ${
+                  isLast ? '' : 'border-b border-zinc-800'
+                }`}
+              >
                 <p className="font-medium text-zinc-100">{job.company}</p>
 
                 {job.roles?.length ? (
