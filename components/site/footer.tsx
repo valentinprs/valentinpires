@@ -1,5 +1,4 @@
 'use client'
-import { TextLoop } from '@/components/ui/text-loop'
 import { SOCIAL_LINKS } from '@/lib/data/social-links'
 
 export function Footer() {
@@ -10,10 +9,7 @@ export function Footer() {
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-30 bg-zinc-950/75 py-4 backdrop-blur-sm">
       <div className="mx-auto flex w-full max-w-screen-sm items-center gap-4 border-t border-zinc-800/60 px-4 pt-4">
-        <TextLoop className="text-xs text-secondary">
-          <span>© 2026 Valentin Pires.</span>
-          <span>Built with Motion-Primitives.</span>
-        </TextLoop>
+        <p className="text-xs text-secondary">© 2026 Valentin Pires.</p>
         <div className="ml-auto flex items-center gap-2">
           <a
             href={linkedIn ?? '#'}

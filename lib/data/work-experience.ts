@@ -15,6 +15,7 @@ export type WorkExperience = {
   company: string
   start: string
   end: string
+  status: 'published' | 'draft'
   title?: string
   location?: string
   bullets?: string[]
@@ -31,6 +32,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     company: 'TotalEnergies',
     start: '2022',
     end: 'Now',
+    status: 'draft',
     roles: [
       {
         title: 'Design Systems Lead',
@@ -75,6 +77,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     company: 'SeLoger',
     start: '2020',
     end: '2022',
+    status: 'draft',
     roles: [
       {
         title: 'Product Designer',
@@ -102,6 +105,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     company: 'Airbus',
     start: '2017',
     end: '2020',
+    status: 'published',
     roles: [
       {
         title: 'UX Designer',
@@ -123,6 +127,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     company: 'Dassault Systèmes',
     start: '2016',
     end: '2016',
+    status: 'published',
     roles: [
       {
         title: 'UX Designer',
@@ -141,6 +146,10 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     slug: 'dassault-systemes',
   },
 ]
+
+export const WORK_EXPERIENCE_PUBLIC = WORK_EXPERIENCE.filter(
+  (experience) => experience.status === 'published',
+)
 
 export const WORK_EXPERIENCE_WITH_WORK_PAGE = WORK_EXPERIENCE.filter(
   (experience) => experience.workPage,

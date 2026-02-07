@@ -40,7 +40,7 @@ export function WorkExperience() {
           }}
         >
           {WORK_EXPERIENCE.map((job, index) => {
-            const isClickable = Boolean(job.workPage)
+            const isClickable = job.status === 'published' && Boolean(job.workPage)
             const isLast = index === WORK_EXPERIENCE.length - 1
             const rowContent = (
               <div

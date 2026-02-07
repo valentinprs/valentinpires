@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { WorkDetailPage } from '@/components/site/work-detail-page'
 import {
   getWorkExperienceBySlug,
@@ -43,6 +43,10 @@ export default async function WorkPage({ params }: WorkPageProps) {
 
   if (!experience) {
     notFound()
+  }
+
+  if (experience.status === 'draft') {
+    redirect('/')
   }
 
   const introBullets = getWorkExperienceIntroBullets(experience)
