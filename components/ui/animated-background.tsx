@@ -12,8 +12,8 @@ import {
 
 export type AnimatedBackgroundProps = {
   children:
-    | ReactElement<{ 'data-id': string }>[]
-    | ReactElement<{ 'data-id': string }>
+    | ReactElement<{ 'data-id'?: string }>[]
+    | ReactElement<{ 'data-id'?: string }>
   defaultValue?: string
   onValueChange?: (newActiveId: string | null) => void
   className?: string
@@ -49,26 +49,29 @@ export function AnimatedBackground({
   return Children.map(children, (child: any, index) => {
     const id = child.props['data-id']
 
-    const interactionProps = enableHover
-      ? {
-          onMouseEnter: () => handleSetActiveId(id),
-          onMouseLeave: () => handleSetActiveId(null),
-        }
-      : {
-          onClick: () => handleSetActiveId(id),
-        }
+    const interactionProps =
+      id === undefined
+        ? {}
+        : enableHover
+          ? {
+              onMouseEnter: () => handleSetActiveId(id),
+              onMouseLeave: () => handleSetActiveId(null),
+            }
+          : {
+              onClick: () => handleSetActiveId(id),
+            }
 
     return cloneElement(
       child,
       {
         key: index,
-        className: cn('relative inline-flex', child.props.className),
-        'data-checked': activeId === id ? 'true' : 'false',
+        className: cn('relative flex w-full', child.props.className),
+        'data-checked': id !== undefined && activeId === id ? 'true' : 'false',
         ...interactionProps,
       },
       <>
         <AnimatePresence initial={false}>
-          {activeId === id && (
+          {id !== undefined && activeId === id && (
             <motion.div
               layoutId={`background-${uniqueId}`}
               className={cn('absolute inset-0', className)}
@@ -83,7 +86,7 @@ export function AnimatedBackground({
             />
           )}
         </AnimatePresence>
-        <div className="z-10">{child.props.children}</div>
+        <div className="z-10 w-full">{child.props.children}</div>
       </>,
     )
   })
