@@ -7,6 +7,7 @@ import {
 import { TextEffect } from '@/components/ui/text-effect'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 
 export function Header() {
   const pathname = usePathname()
@@ -17,8 +18,17 @@ export function Header() {
 
   return (
     <header className="mb-12 space-y-3 text-lg">
-      <div className="flex items-center gap-4 mb-6">
-        <div className="h-12 w-12 overflow-hidden rounded-full border border-zinc-700 bg-zinc-800" />
+      <div className="mb-6 flex items-center gap-4">
+        <div className="h-12 w-12 overflow-hidden rounded-full border border-zinc-700 bg-zinc-800">
+          <Image
+            src="/profile-picture.jpeg"
+            alt="Valentin Pires"
+            width={48}
+            height={48}
+            className="h-full w-full object-cover"
+            priority
+          />
+        </div>
         <div>
           <Link href="/" className="font-medium text-zinc-100">
             Valentin Pires
@@ -41,7 +51,7 @@ export function Header() {
         animate="visible"
       >
         <p className="text-secondary text-sm ">
-          Focused on creating intuitive and performant web experiences.
+          Focused on creating intuitive and fluid web experiences.
           Bridging the gap between design and development.
         </p>
       </motion.section>

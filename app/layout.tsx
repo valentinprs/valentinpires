@@ -39,7 +39,7 @@ export default function RootLayout({
         className={`${inter.className} ${inter.variable} bg-zinc-950 text-sm text-zinc-100 tracking-tight antialiased`}
       >
         <div className="flex min-h-screen w-full flex-col">
-          <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20">
+          <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pb-24 pt-20">
             <Header />
             {children}
             <Footer />
