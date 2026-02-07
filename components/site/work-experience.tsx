@@ -31,7 +31,7 @@ export function WorkExperience() {
 
       <div className="border-t border-zinc-800">
         {WORK_EXPERIENCE.map((job) => {
-          const isTotalEnergies = job.company === 'TotalEnergies'
+          const isClickable = Boolean(job.workPage)
           const rowContent = (
             <div className="grid w-full gap-2 border-b border-zinc-800 py-4 md:grid-cols-[160px_1fr_92px_20px] md:items-start md:gap-4">
               <p className="font-medium text-zinc-100">{job.company}</p>
@@ -59,14 +59,14 @@ export function WorkExperience() {
               </p>
 
               <div className="flex items-start justify-end pt-0.5">
-                {isTotalEnergies ? (
+                {isClickable ? (
                   <ArrowRight className="h-4 w-4 text-secondary" aria-hidden="true" />
                 ) : null}
               </div>
             </div>
           )
 
-          if (!isTotalEnergies) {
+          if (!isClickable) {
             return (
               <div key={job.id} className="w-full">
                 {rowContent}
@@ -86,7 +86,7 @@ export function WorkExperience() {
               }}
             >
               <Link
-                href="/work/totalenergies"
+                href={`/work/${job.slug}`}
                 data-id={job.id}
                 className="-mx-3 w-[calc(100%+1.5rem)] rounded-xl px-3"
               >
