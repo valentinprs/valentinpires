@@ -19,6 +19,7 @@ Personal website for Valentin Pires built with Next.js App Router, React 19, Typ
 - `/blog` — MDX blog (posts listed in `lib/data/blog-posts.ts`, MDX layout in `app/blog/layout.tsx`)
 - `/portfolio` — portfolio slideshow (`components/portfolio/portfolio-slideshow.tsx`)
 - `/work/[slug]` — dynamic work detail pages (`components/site/work-detail-page.tsx`)
+- `/steam` — Steam achievements MCP server (`app/steam/`, `lib/steam-mcp/`, see `docs/steam-mcp.md`)
 
 ### Data layer
 
