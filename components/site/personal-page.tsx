@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react'
 import { WorkExperience } from '@/components/site/work-experience'
+import { SideProjects } from '@/components/site/side-projects'
 import { CertificationsSection } from '@/components/site/certifications-section'
 import { EducationSection } from '@/components/site/education-section'
 
@@ -24,6 +25,7 @@ export function PersonalPage() {
       animate="visible"
     >
       <WorkExperience />
+      <SideProjects />
       <CertificationsSection />
       <EducationSection />
     </motion.main>
