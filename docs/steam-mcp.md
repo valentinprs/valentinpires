@@ -19,7 +19,21 @@ Remote MCP server served at `https://valentinpires.vercel.app/steam/mcp`. Users 
 | `/steam/oauth/callback` | Steam OpenID return, verifies the assertion |
 | `/steam/oauth/token` | Code and refresh token exchange (PKCE S256) |
 
-Tools: `get_steam_profile`, `list_owned_games`, `get_game_achievements`, `get_achievement_overview`. Prompt: `completion_guide`.
+Tools:
+
+- `get_steam_profile`: profile, level, library size, playtime
+- `list_owned_games`: search and sort the library
+- `get_game_achievements`: the user's achievements for one game (hidden descriptions included)
+- `find_quick_wins`: easiest missing achievements of one game, with rarity
+- `get_game_achievement_list`: achievements of any game, owned or not
+- `get_game_details`: Store details, features (co-op, multiplayer) and DLCs
+- `search_achievement_guides`: Steam Community guides, ranked by votes
+- `get_recent_unlocks`: latest unlocks across recently played games
+- `get_achievement_overview`: completion across many games
+
+Prompt: `completion_guide`.
+
+Hidden achievement descriptions and global rates come from `IPlayerService/GetGameAchievements` (undocumented, falls back to the public schema). Store data comes from the public `store.steampowered.com/api` endpoints, cached for a day.
 
 ## Environment variables
 

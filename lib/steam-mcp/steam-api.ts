@@ -179,6 +179,131 @@ export async function getGlobalAchievementPercentages(
   return new Map(list.map((a) => [a.name, Number(a.percent)]))
 }
 
+export type RecentGame = {
+  appid: number
+  name: string
+  playtime_2weeks: number // minutes
+  playtime_forever: number
+}
+
+export async function getRecentlyPlayedGames(
+  steamid: string,
+): Promise<RecentGame[]> {
+  const data = await steamGet<{ response: { games?: RecentGame[] } }>(
+    'IPlayerService/GetRecentlyPlayedGames/v1/',
+    { steamid },
+    { revalidate: 300 },
+  )
+  return data.response.games ?? []
+}
+
+export type CommunityGuide = {
+  publishedfileid: string
+  title: string
+  short_description?: string
+  time_updated: number
+  views?: number
+  favorited?: number
+  vote_data?: { score: number; votes_up: number; votes_down: number }
+}
+
+/** Steam Community guides for a game, ranked by votes. */
+export async function queryGuides(
+  appid: number,
+  searchText: string | undefined,
+  limit: number,
+): Promise<{ total: number; guides: CommunityGuide[] }> {
+  const data = await steamGet<{
+    response: { total?: number; publishedfiledetails?: CommunityGuide[] }
+  }>(
+    'IPublishedFileService/QueryFiles/v1/',
+    {
+      appid,
+      filetype: 11, // k_PFI_MatchingFileType_WebGuides
+      query_type: 0, // k_PublishedFileQueryType_RankedByVote
+      numperpage: limit,
+      return_short_description: 'true',
+      return_vote_data: 'true',
+      ...(searchText ? { search_text: searchText } : {}),
+    },
+    { revalidate: 60 * 60 * 6 },
+  )
+  return {
+    total: data.response.total ?? 0,
+    guides: (data.response.publishedfiledetails ?? []).filter((g) => g.title),
+  }
+}
+
+// Store endpoints are public (no key) and rate limited, so cache them longer.
+async function storeGet<T>(path: string, params: Record<string, string | number>) {
+  const url = new URL(`https://store.steampowered.com/${path}`)
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v))
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(15000),
+    next: { revalidate: 60 * 60 * 24 },
+  })
+  const body = (await res.json().catch(() => null)) as T | null
+  if (!res.ok || !body) {
+    throw new SteamApiError(
+      res.status === 429
+        ? 'Steam Store rate limit reached, try again in a moment.'
+        : `Steam Store request failed (${res.status}).`,
+      res.status,
+    )
+  }
+  return body
+}
+
+export async function searchStore(
+  term: string,
+): Promise<{ appid: number; name: string }[]> {
+  const data = await storeGet<{ items?: { type: string; id: number; name: string }[] }>(
+    'api/storesearch/',
+    { term, l: 'english', cc: 'US' },
+  )
+  return (data.items ?? [])
+    .filter((i) => i.type === 'app')
+    .map((i) => ({ appid: i.id, name: i.name }))
+}
+
+export type StoreAppDetails = {
+  type: string
+  name: string
+  steam_appid: number
+  is_free: boolean
+  short_description?: string
+  developers?: string[]
+  publishers?: string[]
+  release_date?: { coming_soon: boolean; date: string }
+  price_overview?: { final_formatted: string; discount_percent: number }
+  platforms?: Record<string, boolean>
+  metacritic?: { score: number }
+  categories?: { id: number; description: string }[]
+  genres?: { description: string }[]
+  achievements?: { total: number }
+  dlc?: number[]
+  controller_support?: string
+  fullgame?: { appid: string; name: string }
+}
+
+export async function getStoreAppDetails(
+  appid: number,
+  language: string,
+  country: string,
+  filters?: string,
+): Promise<StoreAppDetails | null> {
+  const data = await storeGet<
+    Record<string, { success: boolean; data?: StoreAppDetails }>
+  >('api/appdetails', {
+    appids: appid,
+    l: language,
+    cc: country,
+    ...(filters ? { filters } : {}),
+  })
+  const entry = data[String(appid)]
+  return entry?.success && entry.data ? entry.data : null
+}
+
 export type AchievementDetails = {
   name: string
   description?: string
