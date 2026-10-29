@@ -2,8 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { z } from 'zod'
 import {
   SteamApiError,
-  getAchievementSchema,
-  getGlobalAchievementPercentages,
+  getAchievementDetails,
   getOwnedGames,
   getPlayerAchievements,
   getPlayerSummary,
@@ -14,7 +13,7 @@ import {
 
 const INSTRUCTIONS = `This server reads the signed-in user's Steam library and achievements (Steam profile and game details must be public).
 Typical flow: call list_owned_games or get_achievement_overview to find games, then get_game_achievements with filter "locked" to see what is missing.
-Hidden achievements usually come without a description from Steam. Global unlock percentages tell how rare (and usually how hard) an achievement is. When the user asks for a 100% guide, combine the missing achievements with your own knowledge or web research, and flag missable achievements first.`
+Descriptions of hidden achievements are included but can spoil the story: before revealing a locked hidden one, check that the user is fine with spoilers. Global unlock percentages tell how rare (and usually how hard) an achievement is. When the user asks for a 100% guide, combine the missing achievements with your own knowledge or web research, and flag missable achievements first.`
 
 const PRIVATE_LIBRARY =
   'The Steam library is private. Ask the user to set "Game details" to Public in Steam > Profile > Edit Profile > Privacy Settings.'
@@ -205,10 +204,9 @@ export function createSteamMcpServer(steamid: string): McpServer {
           appid = matches[0].appid
         }
 
-        const [player, schema, globalPercents] = await Promise.all([
+        const [player, details] = await Promise.all([
           getPlayerAchievements(steamid, appid, language),
-          getAchievementSchema(appid, language).catch(() => []),
-          getGlobalAchievementPercentages(appid),
+          getAchievementDetails(appid, language),
         ])
         if (!player.ok) {
           return fail(
@@ -218,19 +216,19 @@ export function createSteamMcpServer(steamid: string): McpServer {
           )
         }
 
-        const schemaByName = new Map(schema.map((a) => [a.name, a]))
         const achievements = player.achievements.map((a) => {
-          const meta = schemaByName.get(a.apiname)
+          const meta = details.get(a.apiname)
           // Kept compact: big games have hundreds of achievements.
           return {
-            name: a.name ?? meta?.displayName ?? a.apiname,
+            name: a.name ?? meta?.name ?? a.apiname,
             description: a.description || meta?.description || undefined,
-            hidden: meta?.hidden === 1 || undefined,
+            hidden: meta?.hidden || undefined,
             unlocked: a.achieved === 1,
             unlocked_on: a.achieved ? isoDate(a.unlocktime) : undefined,
-            global_unlock_percent: globalPercents.has(a.apiname)
-              ? Math.round(globalPercents.get(a.apiname)! * 10) / 10
-              : undefined,
+            global_unlock_percent:
+              meta?.globalPercent !== undefined
+                ? Math.round(meta.globalPercent * 10) / 10
+                : undefined,
           }
         })
         const unlocked = achievements.filter((a) => a.unlocked).length

@@ -179,6 +179,75 @@ export async function getGlobalAchievementPercentages(
   return new Map(list.map((a) => [a.name, Number(a.percent)]))
 }
 
+export type AchievementDetails = {
+  name: string
+  description?: string
+  hidden: boolean
+  globalPercent?: number
+}
+
+/**
+ * Name, description, hidden flag and global unlock rate of every achievement
+ * of a game, keyed by API name. IPlayerService/GetGameAchievements (used by the
+ * Steam client) includes descriptions of hidden achievements, which the
+ * public schema leaves out. It is undocumented, so fall back to the schema and
+ * global percentages when it fails.
+ */
+export async function getAchievementDetails(
+  appid: number,
+  language: string,
+): Promise<Map<string, AchievementDetails>> {
+  const data = await steamGet<{
+    response?: {
+      achievements?: {
+        internal_name: string
+        localized_name: string
+        localized_desc?: string
+        hidden: boolean
+        player_percent_unlocked?: string
+      }[]
+    }
+  }>(
+    'IPlayerService/GetGameAchievements/v1/',
+    { appid, language },
+    { revalidate: 60 * 60 * 6 },
+  ).catch(() => null)
+
+  const list = data?.response?.achievements
+  if (list?.length) {
+    return new Map(
+      list.map((a) => [
+        a.internal_name,
+        {
+          name: a.localized_name,
+          description: a.localized_desc || undefined,
+          hidden: a.hidden,
+          globalPercent:
+            a.player_percent_unlocked !== undefined
+              ? Number(a.player_percent_unlocked)
+              : undefined,
+        },
+      ]),
+    )
+  }
+
+  const [schema, percents] = await Promise.all([
+    getAchievementSchema(appid, language).catch(() => []),
+    getGlobalAchievementPercentages(appid),
+  ])
+  return new Map(
+    schema.map((a) => [
+      a.name,
+      {
+        name: a.displayName,
+        description: a.description || undefined,
+        hidden: a.hidden === 1,
+        globalPercent: percents.get(a.name),
+      },
+    ]),
+  )
+}
+
 export async function mapWithConcurrency<T, R>(
   items: T[],
   limit: number,
