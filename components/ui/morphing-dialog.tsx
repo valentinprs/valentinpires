@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react'
 import {
   motion,
@@ -226,14 +227,16 @@ export type MorphingDialogContainerProps = {
   style?: React.CSSProperties
 }
 
+const subscribeNoop = () => () => {}
+
 function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
   const { isOpen, uniqueId } = useMorphingDialog()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    return () => setMounted(false)
-  }, [])
+  // false during SSR and hydration, true on the client: safe gate for createPortal
+  const mounted = useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  )
 
   if (!mounted) return null
 

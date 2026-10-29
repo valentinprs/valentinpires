@@ -16,6 +16,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     }) => {
       return (
         <figure>
+          {/* eslint-disable-next-line @next/next/no-img-element -- remote cover with unknown dimensions */}
           <img src={src} alt={alt} className="rounded-xl" />
           <figcaption className="text-center">{caption}</figcaption>
         </figure>
