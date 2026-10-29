@@ -11,10 +11,12 @@
   "dependencies": {
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "@next/mdx": "^14.2.13",
     "@tailwindcss/typography": "^0.5.15",
     "@types/mdx": "^2.0.13",
     "clsx": "^2.1.1",
+    "jose": "^6.2.14",
     "lucide-react": "^0.468.0",
     "motion": "^11.15.0",
     "next": "^16.1.1",
@@ -22,7 +24,8 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "sugar-high": "^0.9.3",
-    "tailwind-merge": "^2.5.5"
+    "tailwind-merge": "^2.5.5",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
