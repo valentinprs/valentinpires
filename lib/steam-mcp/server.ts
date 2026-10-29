@@ -13,10 +13,11 @@ import {
   searchStore,
   type OwnedGame,
 } from './steam-api'
+import { fetchGuide, parseGuideId } from './guides'
 
 const INSTRUCTIONS = `This server reads the signed-in user's Steam library and achievements (Steam profile and game details must be public).
 Typical flow: call list_owned_games, get_achievement_overview or get_recent_unlocks to find games, then get_game_achievements with filter "locked" (or find_quick_wins) to see what is missing.
-For a 100% guide, also use get_game_details (DLCs, multiplayer features) and search_achievement_guides (community guides to open and rely on). get_game_achievement_list works for games the user does not own.
+For a 100% guide, also use get_game_details (DLCs, multiplayer features) and search_achievement_guides then read_guide (community guides to rely on, credit their author). get_game_achievement_list works for games the user does not own.
 Descriptions of hidden achievements are included but can spoil the story: before revealing a locked hidden one, check that the user is fine with spoilers. Global unlock percentages tell how rare (and usually how hard) an achievement is. When the user asks for a 100% guide, combine the missing achievements with your own knowledge or web research, and flag missable achievements first.`
 
 const PRIVATE_LIBRARY =
@@ -475,7 +476,7 @@ export function createSteamMcpServer(steamid: string): McpServer {
     {
       title: 'Search achievement guides',
       description:
-        'Search Steam Community guides for a game, ranked by votes, with their link. Open the most relevant ones (with a web fetch tool, if available) to build an accurate 100% guide.',
+        'Search Steam Community guides for a game, ranked by votes, with their link. Read the most relevant ones with read_guide to build an accurate 100% guide.',
       inputSchema: {
         game: gameArg,
         query: z
@@ -511,6 +512,75 @@ export function createSteamMcpServer(steamid: string): McpServer {
             views: g.views,
             updated_on: isoDate(g.time_updated),
           })),
+        })
+      }),
+  )
+
+  server.registerTool(
+    'read_guide',
+    {
+      title: 'Read a Steam guide',
+      description:
+        'Read the content of a Steam Community guide (from search_achievement_guides) as text, section by section. Long guides are paged: call again with next_section to continue. Credit the author and link the guide when using it.',
+      inputSchema: {
+        guide: z
+          .string()
+          .describe('Guide id or its steamcommunity.com URL.'),
+        start_section: z
+          .number()
+          .int()
+          .min(1)
+          .default(1)
+          .describe('First section to return (1-based, see table_of_contents).'),
+        max_chars: z
+          .number()
+          .int()
+          .min(2000)
+          .max(40000)
+          .default(15000)
+          .describe('Approximate size of the returned content.'),
+      },
+      annotations: { readOnlyHint: true, openWorldHint: true },
+    },
+    ({ guide, start_section, max_chars }) =>
+      guard(async () => {
+        const id = parseGuideId(guide)
+        if (!id) return fail('Not a Steam guide id or steamcommunity.com guide URL.')
+        const data = await fetchGuide(id)
+        if (start_section > data.sections.length) {
+          return fail(`This guide only has ${data.sections.length} sections.`)
+        }
+
+        const sections: { section: number; title: string; text: string; truncated?: true }[] = []
+        let used = 0
+        let index = start_section - 1
+        while (index < data.sections.length) {
+          const { title, text } = data.sections[index]
+          if (sections.length > 0 && used + text.length > max_chars) break
+          const truncated = text.length > max_chars
+          sections.push({
+            section: index + 1,
+            title,
+            text: truncated ? `${text.slice(0, max_chars)}…` : text,
+            ...(truncated && { truncated: true as const }),
+          })
+          used += Math.min(text.length, max_chars)
+          index++
+        }
+
+        return ok({
+          id: data.id,
+          title: data.title,
+          author: data.author,
+          url: data.url,
+          ...(start_section === 1 && { description: data.description }),
+          table_of_contents: data.sections.map((s, i) => ({
+            section: i + 1,
+            title: s.title,
+            chars: s.text.length,
+          })),
+          sections,
+          next_section: index < data.sections.length ? index + 1 : undefined,
         })
       }),
   )

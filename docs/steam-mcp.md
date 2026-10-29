@@ -28,6 +28,7 @@ Tools:
 - `get_game_achievement_list`: achievements of any game, owned or not
 - `get_game_details`: Store details, features (co-op, multiplayer) and DLCs
 - `search_achievement_guides`: Steam Community guides, ranked by votes
+- `read_guide`: content of a Steam Community guide as text, paged by section (parsed from the public guide page, no API exists)
 - `get_recent_unlocks`: latest unlocks across recently played games
 - `get_achievement_overview`: completion across many games
 
